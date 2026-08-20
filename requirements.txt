@@ -1,0 +1,13 @@
+numpy
+networkx
+packaging
+pillow
+pyarrow
+pysubs2
+requests
+torch
+torchvision
+tqdm
+transformers>=4.49.0
+accelerate
+pytest
