@@ -7,7 +7,7 @@ from utils.boundary_segmentation import (
     chunk_motion_magnitude,
     subtitle_semantic_scores,
 )
-from utils.vgent import Vgent
+from utils.dagc import DAGC
 
 
 def make_color(rgb, frames=64, height=24, width=24):
@@ -67,27 +67,27 @@ def test_short_final_chunk_does_not_crash():
 
 
 def test_boundary_switch_off_preserves_original_merge_guard():
-    vgent = Vgent.__new__(Vgent)
-    vgent.args = SimpleNamespace(chunk_size=64, fps=1.0)
-    vgent.max_supernode_span = 4
-    vgent.adjacent_sim_threshold = 0.95
-    vgent.boundary_aware_merge = False
-    vgent.boundary_visual_weight = 0.30
-    vgent.boundary_motion_weight = 0.25
-    vgent.boundary_cross_motion_weight = 0.20
-    vgent.boundary_subtitle_weight = 0.25
-    vgent.scene_boundary_threshold = 0.45
-    vgent.event_boundary_threshold = 0.45
-    vgent.boundary_frame_window = 4
-    vgent.boundary_spatial_size = 64
-    vgent.boundary_motion_scale = 0.05
-    vgent.boundary_cross_motion_scale = 0.40
+    dagc = DAGC.__new__(DAGC)
+    dagc.args = SimpleNamespace(chunk_size=64, fps=1.0)
+    dagc.max_supernode_span = 4
+    dagc.adjacent_sim_threshold = 0.95
+    dagc.boundary_aware_merge = False
+    dagc.boundary_visual_weight = 0.30
+    dagc.boundary_motion_weight = 0.25
+    dagc.boundary_cross_motion_weight = 0.20
+    dagc.boundary_subtitle_weight = 0.25
+    dagc.scene_boundary_threshold = 0.45
+    dagc.event_boundary_threshold = 0.45
+    dagc.boundary_frame_window = 4
+    dagc.boundary_spatial_size = 64
+    dagc.boundary_motion_scale = 0.05
+    dagc.boundary_cross_motion_scale = 0.40
     identical = make_color((0.2, 0.4, 0.6))
-    groups, _, boundaries = vgent._build_supernode_groups([identical, identical], None)
+    groups, _, boundaries = dagc._build_supernode_groups([identical, identical], None)
     assert groups == [[0, 1]]
     assert boundaries[0]["decision"] == "merge"
-    feat = vgent._chunk_to_feature(identical)
-    assert vgent._can_hard_merge(
+    feat = dagc._chunk_to_feature(identical)
+    assert dagc._can_hard_merge(
         feat,
         feat,
         boundary={"hard_scene_boundary": True, "hard_event_boundary": True},

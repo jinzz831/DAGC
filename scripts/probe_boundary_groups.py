@@ -16,11 +16,11 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from models.qwenvl import load_video
 from utils.boundary_segmentation import save_boundary_contact_sheets
 from utils.data import EvalDatasetMLVU
-from utils.vgent import Vgent
+from utils.dagc import DAGC
 
 
 def make_grouping_engine(args):
-    engine = Vgent.__new__(Vgent)
+    engine = DAGC.__new__(DAGC)
     engine.args = SimpleNamespace(chunk_size=args.chunk_size, fps=args.fps)
     engine.max_supernode_span = args.max_supernode_span
     engine.adjacent_sim_threshold = args.adjacent_sim_threshold

@@ -16,7 +16,7 @@ import sys
 import traceback
 from itertools import chain
 from utils.data import EvalDatasetMLVU, EvalDatasetVideoMME, EvalDatasetLongVideoBench, get_subtitles
-from utils.vgent import Vgent
+from utils.dagc import DAGC
 import pickle
 from torch import distributed as dist
 from utils.config import get_args
@@ -75,7 +75,7 @@ if world_rank == 0:
             f.write(" ".join(shlex.quote(part) for part in [sys.executable, *sys.argv]) + "\n")
 checkpoint_file = os.path.join(checkpoint_dir, f"cuda:{world_rank}.json")
 
-vgent = Vgent(args)
+dagc = DAGC(args)
 
 
 processed_identifiers = set() 
@@ -321,7 +321,7 @@ else:
 
 cache_identity = {
     "method": (
-        "original_vgent"
+        "uncompressed_graph_rag"
         if args.direct_baseline
         else ("boundary_dagc" if args.boundary_aware_merge else "dagc")
     ),
@@ -386,9 +386,9 @@ for line in pbar:
         continue
     video_load_start_time = time.perf_counter()
     try:
-        raw_video, _, _, frame_idx, fps, video_inputs, size_list = vgent.load_video(video_path, args)
+        raw_video, _, _, frame_idx, fps, video_inputs, size_list = dagc.load_video(video_path, args)
         if "llava_video" in args.model_name:
-            video = vgent.image_processor.preprocess(raw_video, return_tensors="pt")["pixel_values"].cuda().to(dtype=torch.bfloat16)
+            video = dagc.image_processor.preprocess(raw_video, return_tensors="pt")["pixel_values"].cuda().to(dtype=torch.bfloat16)
             video_inputs = [video]
         if type(video_inputs) is not list:
             video_inputs = [video_inputs]
@@ -474,7 +474,7 @@ for line in pbar:
 
     else:
         graph_construction_start_time = time.perf_counter()
-        video_graph, entity_graph = vgent.construct_graph(
+        video_graph, entity_graph = dagc.construct_graph(
             video_inputs,
             subtitles,
             video_name=video_name,
@@ -483,7 +483,7 @@ for line in pbar:
         graph_construction_runtime_seconds = time.perf_counter() - graph_construction_start_time
 
         graph_stats = video_graph.graph.get("stats", {})
-        boundary_diagnostics = getattr(vgent, "last_boundary_diagnostics", None)
+        boundary_diagnostics = getattr(dagc, "last_boundary_diagnostics", None)
         graph_stats["video_name"] = video_name
         graph_stats["construction_runtime_seconds"] = graph_construction_runtime_seconds
 
@@ -524,7 +524,7 @@ for line in pbar:
             json.dump(boundary_diagnostics, f, ensure_ascii=False, indent=2)
 
     online_inference_start_time = time.perf_counter()
-    query_list, llm_info = vgent.extract_keywords(question, candidates, video_inputs)
+    query_list, llm_info = dagc.extract_keywords(question, candidates, video_inputs)
 
     # 先做 task_type 级别纠偏
     if llm_info is None:
@@ -572,16 +572,16 @@ for line in pbar:
     if args.task == "videomme":
         llm_info = correct_tool_for_videomme(question, candidates, llm_info)
     # 关键：纠偏后重新构建 query_list
-    query_list = vgent.build_query_list_from_llm_info(question, candidates, llm_info)
+    query_list = dagc.build_query_list_from_llm_info(question, candidates, llm_info)
 
 
 
-    retrieved_node_list = vgent.retrieve_nodes(
+    retrieved_node_list = dagc.retrieve_nodes(
         question, query_list, video_inputs, candidates,
         video_graph, entity_graph, subtitles, llm_info
     )
     retrieved_node_count = len(retrieved_node_list.get("nodes", [])) if isinstance(retrieved_node_list, dict) else None
-    refined_node_list, sql_check, check_result = vgent.refine_nodes(
+    refined_node_list, sql_check, check_result = dagc.refine_nodes(
         retrieved_node_list,
         question,
         llm_info,
@@ -591,9 +591,9 @@ for line in pbar:
         video_graph,
         size_list
     )
-    # refined_node_list, sql_check, check_result = vgent.refine_nodes(retrieved_node_list, question, llm_info, candidates, video_inputs, subtitles, size_list)
+    # refined_node_list, sql_check, check_result = dagc.refine_nodes(retrieved_node_list, question, llm_info, candidates, video_inputs, subtitles, size_list)
     refined_node_count = len(refined_node_list.get("nodes", [])) if isinstance(refined_node_list, dict) else None
-    pred = vgent.aggregate_nodes(refined_node_list, llm_info, video_inputs, raw_video, size_list, subtitles, prompt, line, video_graph, sql_check, check_result, fps)
+    pred = dagc.aggregate_nodes(refined_node_list, llm_info, video_inputs, raw_video, size_list, subtitles, prompt, line, video_graph, sql_check, check_result, fps)
     online_inference_runtime_seconds = time.perf_counter() - online_inference_start_time
     if torch.cuda.is_available():
         rank_peak_memory_mb = max(
@@ -609,7 +609,7 @@ for line in pbar:
         for _, node_data in video_graph.nodes(data=True):
             if node_data.get("entities") or node_data.get("actions") or node_data.get("scenes"):
                 graph_entity_nonempty_count += 1
-    aggregate_debug = getattr(vgent, "last_aggregate_debug", {})
+    aggregate_debug = getattr(dagc, "last_aggregate_debug", {})
 
     output.append(
         {

@@ -45,7 +45,7 @@ def extract_choice_from_response(text, letters):
             return match.group(1).upper(), cleaned, "matched"
     return None, cleaned, "unmatched"
 
-class Vgent():
+class DAGC:
     def __init__(self, args):
         self.args = args
 
@@ -356,7 +356,7 @@ class Vgent():
     def _chunk_to_feature(self, chunk: torch.Tensor) -> torch.Tensor:
         """
         chunk: [T, C, H, W]
-        用简单均值特征做相邻 chunk 相似度判断，和 vgent1 的思路一致
+        Use the normalized mean-frame feature for adjacent-chunk redundancy.
         """
         chunk_repr = chunk.float().mean(dim=0)   # [C, H, W]
         feat = chunk_repr.flatten()
@@ -2083,7 +2083,7 @@ class Vgent():
             size_list=input_size_list, fps=fps,
             tag="aggregate_nodes",
         )
-        model_response_debug = getattr(self.video_llm, "vgent_last_response", {}) if hasattr(self.video_llm, "__dict__") else {}
+        model_response_debug = getattr(self.video_llm, "dagc_last_response", {}) if hasattr(self.video_llm, "__dict__") else {}
         if model_response_debug:
             self.last_aggregate_debug["actual_num_frames_seen_by_model"] = model_response_debug.get(
                 "actual_num_frames_seen_by_model",

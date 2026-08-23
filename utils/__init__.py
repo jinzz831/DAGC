@@ -1,1 +1,1 @@
-"""Vgent utilities and Boundary-Aware DAGC implementation."""
+"""Density-Aware Graph Construction utilities."""

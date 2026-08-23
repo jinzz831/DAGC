@@ -28,7 +28,7 @@ elif [[ "$method" != "dagc" ]]; then
 fi
 
 command=(
-  torchrun --standalone --nproc_per_node="$nproc" vgent_rag.py
+  torchrun --standalone --nproc_per_node="$nproc" dagc_rag.py
   --model_name "$MODEL_NAME"
   --model_path "$MODEL_PATH"
   --embedding_path "$EMBEDDING_PATH"

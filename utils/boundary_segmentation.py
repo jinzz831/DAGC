@@ -2,7 +2,7 @@
 
 The functions in this module operate on small CPU copies of downsampled frames.
 They never load a model. Subtitle embeddings are produced in one batch by the
-already-loaded text encoder supplied by :class:`Vgent`.
+already-loaded text encoder supplied by the host graph-RAG pipeline.
 """
 
 from __future__ import annotations
