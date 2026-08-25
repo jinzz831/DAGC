@@ -67,17 +67,94 @@ This allows the graph to remain compact without permanently replacing the eviden
 
 Main results on three long-video benchmarks. **Accuracy** is multiple-choice accuracy, **Retained** is the graph-node ratio relative to the Vgent graph, and **Wall Speedup** is end-to-end wall-clock acceleration relative to the corresponding Vgent baseline. **Performance Retention** is computed from the average accuracy across the three benchmarks.
 
-| Model / Method | MLVU Acc. | MLVU Retained | MLVU Speedup | VideoMME Acc. | VideoMME Retained | VideoMME Speedup | LVB Acc. | LVB Retained | LVB Speedup | Avg. Acc. | Performance Retention |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Qwen2.5-VL-7B | 69.0 | - | - | 70.1 | - | - | 59.4 | - | - | 66.2 | - |
-| + Vgent | 73.3 | 100% | 1.0x | 73.3 | 100% | 1.0x | 63.3 | 100% | 1.0x | 70.0 | 100% |
-| **+ DAGC** | **73.4** | **45%** | **1.3x** | **71.1** | **45%** | **1.4x** | **63.1** | **47%** | **1.6x** | **69.2** | **99%** |
-| Qwen2.5-VL-3B | 65.0 | - | - | 67.0 | - | - | 56.3 | - | - | 62.8 | - |
-| + Vgent | 70.0 | 100% | 1.0x | 69.0 | 100% | 1.0x | 60.0 | 100% | 1.0x | 66.3 | 100% |
-| **+ DAGC** | **69.9** | **45%** | **1.3x** | **66.2** | **45%** | **1.3x** | **60.6** | **47%** | **1.3x** | **65.6** | **99%** |
-| Qwen2-VL-7B | 65.7 | - | - | 68.6 | - | - | 56.1 | - | - | 63.5 | - |
-| + Vgent | 71.7 | 100% | 1.0x | 69.7 | 100% | 1.0x | 58.9 | 100% | 1.0x | 66.8 | 100% |
-| **+ DAGC** | **72.1** | **45%** | **1.5x** | **67.3** | **45%** | **1.4x** | **58.6** | **47%** | **1.7x** | **66.0** | **99%** |
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2">Model / Method</th>
+      <th colspan="3">MLVU</th>
+      <th colspan="3">VideoMME</th>
+      <th colspan="3">LVB</th>
+      <th rowspan="2">Avg.<br>Accuracy</th>
+      <th rowspan="2">Performance<br>Retention</th>
+    </tr>
+    <tr>
+      <th>Accuracy</th>
+      <th>Retained</th>
+      <th>Wall Speedup</th>
+      <th>Accuracy</th>
+      <th>Retained</th>
+      <th>Wall Speedup</th>
+      <th>Accuracy</th>
+      <th>Retained</th>
+      <th>Wall Speedup</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Qwen2.5-VL-7B</td>
+      <td>69.0</td><td>&mdash;</td><td>&mdash;</td>
+      <td>70.1</td><td>&mdash;</td><td>&mdash;</td>
+      <td>59.4</td><td>&mdash;</td><td>&mdash;</td>
+      <td>66.2</td><td>&mdash;</td>
+    </tr>
+    <tr>
+      <td>+ Vgent</td>
+      <td>73.3</td><td>100%</td><td>1.0&times;</td>
+      <td>73.3</td><td>100%</td><td>1.0&times;</td>
+      <td>63.3</td><td>100%</td><td>1.0&times;</td>
+      <td>70.0</td><td>100%</td>
+    </tr>
+    <tr>
+      <td><strong>+ DAGC</strong></td>
+      <td><strong>73.4</strong></td><td><strong>45%</strong></td><td><strong>1.3&times;</strong></td>
+      <td><strong>71.1</strong></td><td><strong>45%</strong></td><td><strong>1.4&times;</strong></td>
+      <td><strong>63.1</strong></td><td><strong>47%</strong></td><td><strong>1.6&times;</strong></td>
+      <td><strong>69.2</strong></td><td><strong>99%</strong></td>
+    </tr>
+    <tr>
+      <td>Qwen2.5-VL-3B</td>
+      <td>65.0</td><td>&mdash;</td><td>&mdash;</td>
+      <td>67.0</td><td>&mdash;</td><td>&mdash;</td>
+      <td>56.3</td><td>&mdash;</td><td>&mdash;</td>
+      <td>62.8</td><td>&mdash;</td>
+    </tr>
+    <tr>
+      <td>+ Vgent</td>
+      <td>70.0</td><td>100%</td><td>1.0&times;</td>
+      <td>69.0</td><td>100%</td><td>1.0&times;</td>
+      <td>60.0</td><td>100%</td><td>1.0&times;</td>
+      <td>66.3</td><td>100%</td>
+    </tr>
+    <tr>
+      <td><strong>+ DAGC</strong></td>
+      <td><strong>69.9</strong></td><td><strong>45%</strong></td><td><strong>1.3&times;</strong></td>
+      <td><strong>66.2</strong></td><td><strong>45%</strong></td><td><strong>1.3&times;</strong></td>
+      <td><strong>60.6</strong></td><td><strong>47%</strong></td><td><strong>1.3&times;</strong></td>
+      <td><strong>65.6</strong></td><td><strong>99%</strong></td>
+    </tr>
+    <tr>
+      <td>Qwen2-VL-7B</td>
+      <td>65.7</td><td>&mdash;</td><td>&mdash;</td>
+      <td>68.6</td><td>&mdash;</td><td>&mdash;</td>
+      <td>56.1</td><td>&mdash;</td><td>&mdash;</td>
+      <td>63.5</td><td>&mdash;</td>
+    </tr>
+    <tr>
+      <td>+ Vgent</td>
+      <td>71.7</td><td>100%</td><td>1.0&times;</td>
+      <td>69.7</td><td>100%</td><td>1.0&times;</td>
+      <td>58.9</td><td>100%</td><td>1.0&times;</td>
+      <td>66.8</td><td>100%</td>
+    </tr>
+    <tr>
+      <td><strong>+ DAGC</strong></td>
+      <td><strong>72.1</strong></td><td><strong>45%</strong></td><td><strong>1.5&times;</strong></td>
+      <td><strong>67.3</strong></td><td><strong>45%</strong></td><td><strong>1.4&times;</strong></td>
+      <td><strong>58.6</strong></td><td><strong>47%</strong></td><td><strong>1.7&times;</strong></td>
+      <td><strong>66.0</strong></td><td><strong>99%</strong></td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 
