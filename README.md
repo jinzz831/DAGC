@@ -67,19 +67,19 @@ This allows the graph to remain compact without permanently replacing the eviden
 
 ## 📊 Key Results
 
-Across MLVU, VideoMME, and LongVideoBench, DAGC:
+Main results on three long-video benchmarks. **Accuracy** is multiple-choice accuracy, **Retained** is the graph-node ratio relative to the Vgent graph, and **Wall Speedup** is end-to-end wall-clock acceleration relative to the corresponding Vgent baseline. **Performance Retention** is computed from the average accuracy across the three benchmarks.
 
-- retains approximately **40-50%** of the original indexing units;
-- provides approximately **1.3-1.7x** end-to-end acceleration;
-- preserves approximately **99%** of the original QA performance.
-
-At the same 47% retained-node budget on LongVideoBench:
-
-| Coarsening Strategy | Accuracy | Retained Nodes |
-|---|---:|---:|
-| Random Merge | 61.53 | 47% |
-| Uniform Merge | 62.28 | 47% |
-| **DAGC** | **63.07** | **47%** |
+| Model / Method | MLVU Acc. | MLVU Retained | MLVU Speedup | VideoMME Acc. | VideoMME Retained | VideoMME Speedup | LVB Acc. | LVB Retained | LVB Speedup | Avg. Acc. | Performance Retention |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Qwen2.5-VL-7B | 69.0 | - | - | 70.1 | - | - | 59.4 | - | - | 66.2 | - |
+| + Vgent | 73.3 | 100% | 1.0x | 73.3 | 100% | 1.0x | 63.3 | 100% | 1.0x | 70.0 | 100% |
+| **+ DAGC** | **73.4** | **45%** | **1.3x** | **71.1** | **45%** | **1.4x** | **63.1** | **47%** | **1.6x** | **69.2** | **99%** |
+| Qwen2.5-VL-3B | 65.0 | - | - | 67.0 | - | - | 56.3 | - | - | 62.8 | - |
+| + Vgent | 70.0 | 100% | 1.0x | 69.0 | 100% | 1.0x | 60.0 | 100% | 1.0x | 66.3 | 100% |
+| **+ DAGC** | **69.9** | **45%** | **1.3x** | **66.2** | **45%** | **1.3x** | **60.6** | **47%** | **1.3x** | **65.6** | **99%** |
+| Qwen2-VL-7B | 65.7 | - | - | 68.6 | - | - | 56.1 | - | - | 63.5 | - |
+| + Vgent | 71.7 | 100% | 1.0x | 69.7 | 100% | 1.0x | 58.9 | 100% | 1.0x | 66.8 | 100% |
+| **+ DAGC** | **72.1** | **45%** | **1.5x** | **67.3** | **45%** | **1.4x** | **58.6** | **47%** | **1.7x** | **66.0** | **99%** |
 
 ---
 
