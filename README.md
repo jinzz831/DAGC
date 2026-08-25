@@ -10,6 +10,11 @@
 
 ## 🧭 Overview
 
+<p align="center">
+  <img src="assets/motivation.png" width="100%" alt="Comparison of fine indexing, coarse indexing, and DAGC adaptive coarse indexing with fine evidence recovery">
+</p>
+
+
 Long-video graph RAG systems commonly use the same fixed-length chunks for both indexing and reasoning. This is inefficient in visually repetitive regions and may lose important details when coarse units are used directly as evidence.
 
 **Density-Aware Graph Construction (DAGC)** decouples these two granularities:
@@ -19,9 +24,7 @@ Long-video graph RAG systems commonly use the same fixed-length chunks for both 
 
 DAGC is training-free and can be integrated into different long-video graph RAG pipelines and vision-language models.
 
-<p align="center">
-  <img src="assets/motivation.png" width="100%" alt="Comparison of fine indexing, coarse indexing, and DAGC adaptive coarse indexing with fine evidence recovery">
-</p>
+
 
 ---
 
