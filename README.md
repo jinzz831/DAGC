@@ -1,6 +1,4 @@
-# Coarse Indexing, Fine Evidence
-
-## Density-Aware Graph Construction for Long-Video RAG
+# Coarse Indexing, Fine Evidence: Density-Aware Graph Construction for Long-Video RAG
 
 🎞️ Density-Adaptive Coarsening | 🕸️ Compact Graph Indexing | 🔍 Fine-Evidence Recovery
 
